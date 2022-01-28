@@ -18,9 +18,9 @@ gris = (211, 211, 211)
 bleu = (0, 0, 255)
 rouge = (255, 0, 0)
 vert = (0, 128, 0)
-level = 1
-Gold = 0
-Armor = 5
+LEVEL = 1
+GOLD = 0
+ARMOR = 5
 
 
 def interieur_carre(x1, y1, x2, y2):
@@ -65,7 +65,7 @@ def couloir():
 
 
 def combat(Arm, lvl, Gld):
-    up = False
+    lup = False
     if (x, y) in mechants:
         mechants.remove((x, y))
         damage = randint(0, 3)
@@ -73,10 +73,10 @@ def combat(Arm, lvl, Gld):
         if Arm <= 0:
             return 0, False, Gld
         elif randint(1, lvl) == 1:
-            up = True
-            Arm = level + 4
-            Gld += randint(0, 3)
-    return Arm, up, Gld
+            lup = True
+            Arm = lvl + 4
+        Gld += randint(1, 5)
+    return Arm, lup, Gld
 
 
 # Génère le donjon
@@ -122,26 +122,16 @@ while running:
                 if event.key == pg.K_i:
                     if (x, y-1) in interieurs or (x, y-1) in couloirs:
                         y -= 1
-                        Armor, lvlup, Gold = combat(Armor, level, Gold)
-                        level += lvlup
                 elif event.key == pg.K_k:
                     if (x, y+1) in interieurs or (x, y+1) in couloirs:
                         y += 1
                         trace_rect(x, y, jaune)
-                        Armor, lvlup, Gold = combat(Armor, level, Gold)
-                        level += lvlup
                 elif event.key == pg.K_j:
                     if (x-1, y) in interieurs or (x-1, y) in couloirs:
                         x -= 1
-                        Armor, lvlup, Gold = combat(Armor, level, Gold)
-                        if lvlup:
-                            time = 0
-                            level += 1
                 elif event.key == pg.K_l:
                     if (x+1, y) in interieurs or (x+1, y) in couloirs:
                         x += 1
-                        trace_rect(x, y, jaune)
-                        Armor, lvlup, Gold = combat(Armor, level, Gold)
 
     # 3. rendu
     trace_rect(0, 0, noir, width=600, height=600)
@@ -161,20 +151,23 @@ while running:
     for k, mechant in enumerate(mechants):
         trace_rect(*mechant, rouge)
 
-    caracteristiques = f"Level: {level}, Gold: {Gold}, Armor: {Armor}"
+    caracteristiques = f"Level: {LEVEL}, Gold: {GOLD}, Armor: {ARMOR}"
     pg.display.set_caption(caracteristiques)
 
-    if lvlup:
+    ARMOR, lvlup, GOLD = combat(ARMOR, LEVEL, GOLD)
+
+    if ARMOR == 0 or not mechants:
+        running = False
+
+    if lvlup and running:
         time = 0
-        level += 1
+        LEVEL += 1
         lvlup = False
     if time < 30:
         textsurface = myfont.render('LEVEL UP!', False, vert)
         screen.blit(textsurface, (175, 275))
     time += 1
 
-    if Armor == 0 or not mechants:
-        running = False
     pg.display.update()
 
 # Message de fin de jeu
