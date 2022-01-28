@@ -5,7 +5,6 @@ import pygame as pg
 # Initialisation
 pg.font.init()
 myfont = pg.font.SysFont('Alerte', 75)
-# pg.init()
 screen = pg.display.set_mode((600, 600))
 clock = pg.time.Clock()
 
