@@ -89,7 +89,7 @@ x, y = 10, 10
 
 
 # Placement des méchants
-nb = randint(5, 15)
+nb = randint(10, 15)
 choix = interieurs.copy()
 choix.remove((10, 10))
 mechants = []
@@ -150,22 +150,22 @@ while running:
     for k, mechant in enumerate(mechants):
         trace_rect(*mechant, rouge)
 
+    ARMOR, lvlup, GOLD = combat(ARMOR, LEVEL, GOLD)
+
     caracteristiques = f"Level: {LEVEL}, Gold: {GOLD}, Armor: {ARMOR}"
     pg.display.set_caption(caracteristiques)
-
-    ARMOR, lvlup, GOLD = combat(ARMOR, LEVEL, GOLD)
 
     if ARMOR == 0 or not mechants:
         running = False
 
-    if lvlup and running:
+    if lvlup:
         time = 0
         LEVEL += 1
         lvlup = False
-    if time < 30:
+    if time < 30 and running:
         textsurface = myfont.render('LEVEL UP!', False, vert)
         screen.blit(textsurface, (175, 275))
-    time += 1
+        time += 1
 
     pg.display.update()
 
